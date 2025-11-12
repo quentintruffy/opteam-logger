@@ -1,13 +1,9 @@
+'use server';
+
 import { LogArraySchema, LogArrayType } from '@/schemas';
-import Redis from 'ioredis';
+import { redis } from './import';
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST || '192.168.1.23',
-  port: Number(process.env.REDIS_PORT) || 6379,
-  db: Number(process.env.REDIS_DB) || 1,
-});
-
-const getAllLogs = async (): Promise<LogArrayType | null> => {
+export const getAllLogs = async (): Promise<LogArrayType | null> => {
   try {
     const keys = await redis.keys('*');
 
@@ -41,5 +37,3 @@ const getAllLogs = async (): Promise<LogArrayType | null> => {
     return null;
   }
 };
-
-export { getAllLogs, redis };

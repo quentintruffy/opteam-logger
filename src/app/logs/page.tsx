@@ -1,13 +1,35 @@
+'use client';
+
 import { Sidemenu, Table } from '@/components';
+import { LogArrayType } from '@/schemas';
+import { useLiveStore } from '@/stores/useLiveStore';
 import { getAllLogs } from '@/utils/redis';
-import { Metadata } from 'next';
+import { useEffect, useState } from 'react';
 
-export const metadata: Metadata = {
-  title: 'Logger',
-};
+// export const metadata: Metadata = {
+//   title: 'Logger',
+// };
 
-export default async function LogsPage() {
-  const logs = await getAllLogs();
+export default function LogsPage() {
+  const [logs, setLogs] = useState<LogArrayType | null>(null);
+  const { liveMode } = useLiveStore();
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      const logs = await getAllLogs();
+      setLogs(logs);
+    };
+    fetchLogs();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const logs = await getAllLogs();
+      setLogs(logs);
+    }, 10);
+    return () => clearInterval(interval);
+  }, [liveMode]);
+
   if (!logs) {
     return <div>No logs found</div>;
   }

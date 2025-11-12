@@ -12,6 +12,7 @@ const LogSchema = z.object({
   action: z.string(),
   service: z.string(),
   message: z.string(),
+  raw: z.string(),
 });
 const LogArraySchema = z.array(LogSchema);
 
