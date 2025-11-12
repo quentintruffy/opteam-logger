@@ -1,5 +1,10 @@
 import { Sidemenu, Table } from '@/components';
 import { getAllLogs } from '@/utils/redis';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Logger',
+};
 
 export default async function LogsPage() {
   const logs = await getAllLogs();
