@@ -14,6 +14,7 @@ export default function LogsPage() {
   const [logs, setLogs] = useState<LogArrayType | null>(null);
   const { liveMode } = useLiveStore();
 
+  // Récupération initiale
   useEffect(() => {
     const fetchLogs = async () => {
       const logs = await getAllLogs();
@@ -22,11 +23,15 @@ export default function LogsPage() {
     fetchLogs();
   }, []);
 
+  // Polling en live mode uniquement
   useEffect(() => {
+    if (!liveMode) return; // N'active que si liveMode est true
+
     const interval = setInterval(async () => {
       const logs = await getAllLogs();
       setLogs(logs);
-    }, 10);
+    }, 200);
+
     return () => clearInterval(interval);
   }, [liveMode]);
 
